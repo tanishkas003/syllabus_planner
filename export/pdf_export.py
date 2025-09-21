@@ -35,10 +35,13 @@ PDF_TEMPLATE = """
 </html>
 """
 
+
 def generate_pdf(plan: dict, filename="study_plan.pdf"):
     tpl = Template(PDF_TEMPLATE)
-    html = tpl.render(course_title=plan.get("course_title","Study Plan"),
-                      weeks=plan.get("weeks",[]),
-                      generated_at=datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"))
+    html = tpl.render(
+        course_title=plan.get("course_title", "Study Plan"),
+        weeks=plan.get("weeks", []),
+        generated_at=datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
+    )
     HTML(string=html).write_pdf(filename)
     return filename

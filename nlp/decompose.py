@@ -1,5 +1,12 @@
 import json
-from nlp.llm_client import chat_completion, DECOMPOSE_SYSTEM, DECOMPOSE_USER, GEN_CARD_SYSTEM, GEN_CARD_USER
+from nlp.llm_client import (
+    chat_completion,
+    DECOMPOSE_SYSTEM,
+    DECOMPOSE_USER,
+    GEN_CARD_SYSTEM,
+    GEN_CARD_USER,
+)
+
 
 def decompose_topic(topic_title: str, context: str):
     prompt = DECOMPOSE_USER.format(topic=topic_title, context=context)
@@ -8,7 +15,8 @@ def decompose_topic(topic_title: str, context: str):
         data = json.loads(resp)
     except Exception:
         import re
-        m = re.search(r'(\[.*\])', resp, re.S)
+
+        m = re.search(r"(\[.*\])", resp, re.S)
         if m:
             data = json.loads(m.group(1))
         else:
@@ -18,14 +26,20 @@ def decompose_topic(topic_title: str, context: str):
         node.setdefault("difficulty", "mid")
     return data
 
+
 def generate_cards_for_node(node):
-    prompt = GEN_CARD_USER.format(title=node["title"], objective=node.get("objective",""), est_hours=node.get("est_hours",1))
+    prompt = GEN_CARD_USER.format(
+        title=node["title"],
+        objective=node.get("objective", ""),
+        est_hours=node.get("est_hours", 1),
+    )
     resp = chat_completion(GEN_CARD_SYSTEM, prompt, temperature=0.4, max_tokens=800)
     try:
         obj = json.loads(resp)
     except Exception:
         import re
-        m = re.search(r'(\{.*\})', resp, re.S)
+
+        m = re.search(r"(\{.*\})", resp, re.S)
         if m:
             obj = json.loads(m.group(1))
         else:
