@@ -3,7 +3,7 @@ uvicorn[standard]==0.22.0
 python-multipart==0.0.6
 pydantic==1.10.12
 requests==2.31.0
-openai==1.32.2
+openai==1.40.3
 PyMuPDF==1.22.2
 python-docx==0.8.12
 spacy==3.7.1
