@@ -14,18 +14,18 @@ PDF_TEMPLATE = """
   </head>
   <body>
     <header>
-      <h1>{{course_title}}</h1>
-      <p>Generated: {{generated_at}}</p>
+      <h1>{{ course_title }}</h1>
+      <p>Generated: {{ generated_at }}</p>
     </header>
-    {% for idx, week in enumerate(weeks, start=1) %}
+    {% for idx, week in weeks %}
       <div class="week">
-        <h3>Week {{idx}} - {{week.date_range if week.date_range else ""}}</h3>
-        <p>Estimated hours left: {{week.remaining}}</p>
+        <h3>Week {{ idx }} - {{ week.date_range if week.date_range else "" }}</h3>
+        <p>Estimated hours left: {{ week.remaining }}</p>
         <ul>
         {% for t in week.topics %}
           <li class="topic">
-            <strong>{{t.title}}</strong> — {{t.est_hours}} hrs
-            <div>{{t.objective}}</div>
+            <strong>{{ t.title }}</strong> — {{ t.est_hours }} hrs
+            <div>{{ t.objective }}</div>
           </li>
         {% endfor %}
         </ul>
@@ -35,13 +35,23 @@ PDF_TEMPLATE = """
 </html>
 """
 
-
-def generate_pdf(plan: dict, filename="study_plan.pdf"):
+def generate_pdf(plan: dict, filename: str):
+    """
+    Generates a PDF from a plan dictionary.
+    :param plan: The study plan dictionary
+    :param filename: Full path to save PDF
+    """
     tpl = Template(PDF_TEMPLATE)
+
+    # Enumerate weeks because Jinja2 can't access Python's enumerate by default
+    weeks_with_index = list(enumerate(plan.get("weeks", []), start=1))
+
     html = tpl.render(
         course_title=plan.get("course_title", "Study Plan"),
-        weeks=plan.get("weeks", []),
+        weeks=weeks_with_index,
         generated_at=datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
     )
+
+    # Save PDF
     HTML(string=html).write_pdf(filename)
     return filename

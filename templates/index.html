@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syllabus Planner</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --dark: #2b2d42;
+            --light: #f8f9fa;
+            --gray: #adb5bd;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        main {
+            padding: 40px;
+        }
+
+        .form-container {
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        input[type="file"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input[type="file"] {
+            padding: 10px 15px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .file-info {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .number-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(67, 97, 238, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        #result {
+            margin-top: 30px;
+            padding: 25px;
+            background: #e8f4fd;
+            border-radius: 12px;
+            border-left: 5px solid var(--primary);
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        #result.hidden {
+            display: none;
+        }
+
+        #result h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--success);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            margin: 15px 0;
+            transition: var(--transition);
+        }
+
+        .download-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #summary {
+            margin-top: 10px;
+            color: var(--dark);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .error-message {
+            color: var(--warning);
+            margin-top: 10px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+            }
+            
+            header {
+                padding: 30px 20px;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            main {
+                padding: 25px;
+            }
+            
+            .number-inputs {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-book-open"></i> Syllabus Planner</h1>
+            <p>Upload your syllabus and generate a personalized study plan in minutes!</p>
+        </header>
+
+        <main>
+            <div class="form-container">
+                <form id="syllabusForm">
+                    <div class="form-group">
+                        <label for="file"><i class="fas fa-file-upload"></i> Upload Syllabus (PDF/DOCX)</label>
+                        <input type="file" id="file" name="file" accept=".pdf,.docx" required>
+                        <div class="file-info">Supported formats: PDF, DOCX (Max size: 10MB)</div>
+                        <div class="error-message" id="fileError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="number-inputs">
+                            <div>
+                                <label for="hours"><i class="fas fa-clock"></i> Hours per Week</label>
+                                <input type="number" id="hours" name="hours_per_week" value="8" min="1" max="40" required>
+                            </div>
+                            <div>
+                                <label for="weeks"><i class="fas fa-calendar-alt"></i> Total Weeks</label>
+                                <input type="number" id="weeks" name="total_weeks" value="12" min="1" max="52" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submitBtn">
+                        <i class="fas fa-magic"></i> Generate Study Plan
+                    </button>
+                </form>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Processing your syllabus and generating study plan...</p>
+            </div>
+
+            <div id="result" class="hidden">
+                <h2><i class="fas fa-check-circle"></i> Plan Generated Successfully!</h2>
+                <a id="pdfLink" href="#" target="_blank" class="download-btn">
+                    <i class="fas fa-download"></i> Download PDF Plan
+                </a>
+                <p id="summary"></p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const form = document.getElementById('syllabusForm');
+        const resultDiv = document.getElementById('result');
+        const pdfLink = document.getElementById('pdfLink');
+        const summary = document.getElementById('summary');
+        const loadingDiv = document.getElementById('loading');
+        const submitBtn = document.getElementById('submitBtn');
+        const fileInput = document.getElementById('file');
+        const fileError = document.getElementById('fileError');
+
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            fileError.style.display = 'none';
+            
+            if (file) {
+                const fileSize = file.size / 1024 / 1024; // in MB
+                const fileType = file.name.split('.').pop().toLowerCase();
+                
+                if (!['pdf', 'docx'].includes(fileType)) {
+                    fileError.textContent = 'Please upload a PDF or DOCX file.';
+                    fileError.style.display = 'block';
+                    this.value = '';
+                } else if (fileSize > 10) {
+                    fileError.textContent = 'File size must be less than 10MB.';
+                    fileError.style.display = 'block';
+                    this.value = '';
+                }
+            }
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!fileInput.files.length) {
+                fileError.textContent = 'Please upload a syllabus file.';
+                fileError.style.display = 'block';
+                return;
+            }
+
+            const hours = document.getElementById('hours').value;
+            const weeks = document.getElementById('weeks').value;
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+            loadingDiv.style.display = 'block';
+            resultDiv.classList.add('hidden');
+
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+            formData.append("hours_per_week", hours);
+            formData.append("total_weeks", weeks);
+
+            try {
+                const response = await fetch("/generate", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const data = await response.json();
+                
+                if (data.status === "done") {
+                    pdfLink.href = data.pdf;
+                    summary.textContent = `Your ${data.plan_summary.weeks}-week study plan is ready! You'll study ${hours} hours per week.`;
+                    resultDiv.classList.remove('hidden');
+                    
+                    resultDiv.style.animation = 'none';
+                    setTimeout(() => {
+                        resultDiv.style.animation = 'fadeIn 0.5s ease';
+                    }, 10);
+                } else {
+                    summary.textContent = "Failed to generate plan. Please try again.";
+                    resultDiv.classList.remove('hidden');
+                }
+            } catch (err) {
+                console.error(err);
+                summary.textContent = "Error generating plan. Please check your connection and try again.";
+                resultDiv.classList.remove('hidden');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-magic"></i> Generate Study Plan';
+                loadingDiv.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentNode.style.transform = 'scale(1.02)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentNode.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
