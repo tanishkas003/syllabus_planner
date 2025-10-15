@@ -1,28 +1,37 @@
-# Web framework
+# --- Web framework ---
 fastapi==0.111.0
 uvicorn==0.30.0
 python-multipart==0.0.9
 pydantic==1.10.12
-requests==2.31.0
+aiofiles==24.1.0
 
-# Optimization / scheduling
+# --- Optimization / scheduling ---
 pulp==2.7.0
 
-# LLM + NLP
+# --- LLM + NLP ---
 openai==1.40.3
 spacy==3.7.5
 sentence-transformers==2.7.0
 faiss-cpu==1.8.0
 
-# Export / formatting
+# SpaCy model (install separately)
+# python -m spacy download en_core_web_sm
+
+# --- Export / formatting ---
 jinja2==3.1.4
 weasyprint==62.3
 PyMuPDF==1.24.3
 python-docx==1.1.2
 
-# Integrations
+# --- Integrations ---
 notion-client==2.2.1
 
-# Utils
+# --- Utilities ---
 numpy==1.26.4
 pandas==2.2.2
+requests==2.31.0
+
+# --- Optional (for better performance / stability) ---
+fonttools==4.53.1
+cffi==1.17.1
+brotli==1.1.0
